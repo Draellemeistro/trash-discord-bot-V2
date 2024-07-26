@@ -1,0 +1,10 @@
+- [ ] play sounds: https://github.com/discordjs/voice-examples/blob/main/basic/README.md
+- [ ] Monitor voice activity
+        https://github.com/discordjs/voice-examples/tree/main/recorder
+- [ ] normalize audio levels
+- [ ]  kig paa VoiceConnection : https://discord.js.org/docs/packages/voice/0.17.0/VoiceConnection:Class
+- [ ]  kig paa VoiceReceiver : https://discord.js.org/docs/packages/voice/0.17.0/VoiceReceiver:Class
+- [ ]
+- [ ]
+- [ ]
+- [ ]
