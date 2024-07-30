@@ -290,3 +290,4 @@ if __name__ == "__main__":
     if return_img2 is not None:
         cv2.imwrite("output2.jpg", return_img2)
         cv2.imwrite("output3.jpg", return_img3)
+    exit(0)

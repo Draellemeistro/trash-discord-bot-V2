@@ -66,10 +66,19 @@ module.exports = {
                 if (output.includes('Saving image')) {
                     if (interaction.replied || interaction.deferred) {
                         console.log('Replying with image');
-                        interaction.followUp({ files: [imgPath] });
+                        interaction.followUp({ files: [imgPath] }).then(() => {
+                            if (fs.existsSync(imgPath)) {
+                                fs.unlinkSync(imgPath);
+                            }
+                        });
                     } else {
-                        interaction.reply({ files: [imgPath] });
+                        interaction.reply({ files: [imgPath] }).then(() => {
+                            if (fs.existsSync(imgPath)) {
+                                fs.unlinkSync(imgPath);
+                            }
+                        });
                     }
+
                 }
             });
 
