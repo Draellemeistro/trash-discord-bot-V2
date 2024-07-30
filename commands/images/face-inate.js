@@ -59,7 +59,7 @@ module.exports = {
             if (interaction.replied || interaction.deferred) {
                 await interaction.followUp(`Available overlays: ${folderNames}`);
             } else {
-                await interaction.reply(`Available overlays: ${folderNames}`);
+                await interaction.reply(`Available overlays: \n${folderNames}\n\n donate some photos, brev`);
                 return;
             }
         }
