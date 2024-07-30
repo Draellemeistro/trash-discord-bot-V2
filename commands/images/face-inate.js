@@ -53,7 +53,12 @@ module.exports = {
                 commandStr += ` ${trimmedPeople}`;
             }
         } else if (subcommand === 'people') {
-            commandStr += ` people`;
+            const overlaysPath = path.join(pythonPath, 'face_overlays');
+            const folders = fs.readdirSync(overlaysPath).filter(file => fs.statSync(path.join(overlaysPath, file)).isDirectory());
+            const folderNames = folders.join(', ');
+            interaction.reply(`Available overlays: ${folderNames}`);
+            return;
+
         }
 
         // Ensure the script is executable
