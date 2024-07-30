@@ -1,7 +1,8 @@
 const {SlashCommandBuilder} = require("discord.js");
 const path = require('path');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const pythonPath = path.join(__dirname, '..', '..', 'pythonFaceOverlayer');
+const imgPath = path.join(pythonPath, 'output.jpg');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -45,19 +46,26 @@ module.exports = {
         } else if (subcommand === 'people') {
             commandStr += ` people`;
         }
-        exec(commandStr, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing command: ${error.message}`);
-                interaction.reply(`Error: ${error.message}`);
-                return;
+
+        const process = spawn(commandStr, { shell: true });
+
+        process.stdout.on('data', (data) => {
+            const output = data.toString();
+            console.log(`stdout: ${output}`);
+
+            if (output.includes('Saving image')) {
+                interaction.reply({ files: [imgPath] });
             }
-            if (stderr) {
-                console.error(`stderr: ${stderr}`);
-                interaction.reply(`stderr: ${stderr}`);
-                return;
+        });
+
+        process.stderr.on('data', (data) => {
+            console.error(`stderr: ${data.toString()}`);
+        });
+
+        process.on('close', (code) => {
+            if (code !== 0) {
+                interaction.reply(`Process exited with code ${code}`);
             }
-            console.log(`stdout: ${stdout}`);
-            interaction.reply(`Output: ${stdout}`);
         });
     }
 };
