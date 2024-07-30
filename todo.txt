@@ -8,3 +8,6 @@
 - [ ]
 - [ ]
 - [ ]
+
+fra cmd:
+scp -r "C:\Users\and\OneDrive - Hafsjold Data Consult\Dokumenter\GitHub\trash-discord-bot-V2\pythonFaceOverlayer\face_overlays" and@hafserver:~/drippybot/trash-discord-bot-V2/pythonFaceOverlayer
