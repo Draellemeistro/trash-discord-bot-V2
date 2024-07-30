@@ -19,7 +19,7 @@ module.exports = {
                         .setDescription('person to overlay')
                         .setRequired(true))
                 .addStringOption(option =>
-                    option.setName('other people')
+                    option.setName('other_people')
                         .setDescription('people to overlay, separated by commas: "person1, person2, person3"')
                         .setRequired(false)))
         .addSubcommand(subcommand =>
@@ -29,7 +29,7 @@ module.exports = {
 
     async execute(interaction) {
         const subcommand = interaction.options.getSubcommand();
-        let commandStr = `python3.12 ${path.join(pythonPath, 'putFacesOn.py')} overlay`;
+        let commandStr = `./run_faces.sh`;
 
 
         if (subcommand === 'overlay') {
