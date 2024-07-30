@@ -10,7 +10,7 @@ python3 -m venv "$SCRIPT_DIR/.venv"
 source "$SCRIPT_DIR/.venv/bin/activate"
 
 # Install required packages
-pip install -r "$SCRIPT_DIR/requirements.txt"
+## pip install -r "$SCRIPT_DIR/requirements.txt"
 
 # Run the Python script with the provided arguments
 python "$SCRIPT_DIR/putFacesOn.py" "$@"
