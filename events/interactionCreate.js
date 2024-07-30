@@ -12,7 +12,7 @@ module.exports = {
             return;
         }
 
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ ephemeral: command.ephemeral });
 
         try {
             await command.execute(interaction);
