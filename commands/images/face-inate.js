@@ -66,7 +66,11 @@ module.exports = {
             console.log(`stdout: ${output}`);
 
             if (output.includes('Saving image')) {
-                interaction.reply({ files: [imgPath] });
+                if (interaction.replied || interaction.deferred) {
+                    interaction.followUp({ files: [imgPath] });
+                } else {
+                    interaction.reply({ files: [imgPath] });
+                }
             }
         });
 
@@ -76,7 +80,11 @@ module.exports = {
 
         process.on('close', (code) => {
             if (code !== 0) {
-                interaction.reply(`Process exited with code ${code}`);
+                if (interaction.replied || interaction.deferred) {
+                    interaction.followUp(`Process exited with code ${code}`);
+                } else {
+                    interaction.reply(`Process exited with code ${code}`);
+                }
             }
             // Clean up the temporary file
             if (tempFilePath && fs.existsSync(tempFilePath)) {
