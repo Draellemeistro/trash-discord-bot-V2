@@ -35,6 +35,7 @@ module.exports = {
     async execute(interaction) {
         const subcommand = interaction.options.getSubcommand();
         let commandStr = `${scriptPath}`;
+        let tempFilePath;
 
         if (subcommand === 'overlay') {
             const file = interaction.options.getAttachment('file');
@@ -43,7 +44,7 @@ module.exports = {
 
             // Download the image
             const response = await axios.get(file.url, { responseType: 'arraybuffer' });
-            const tempFilePath = path.join(os.tmpdir(), 'temp_image.png');
+            tempFilePath = path.join(os.tmpdir(), 'temp_image.png');
             fs.writeFileSync(tempFilePath, response.data);
 
             commandStr += ` overlay ${tempFilePath} ${person}`;
@@ -54,6 +55,9 @@ module.exports = {
         } else if (subcommand === 'people') {
             commandStr += ` people`;
         }
+
+        // Ensure the script is executable
+        fs.chmodSync(scriptPath, '755');
 
         const process = spawn(commandStr, { shell: true });
 
@@ -75,7 +79,7 @@ module.exports = {
                 interaction.reply(`Process exited with code ${code}`);
             }
             // Clean up the temporary file
-            if (fs.existsSync(tempFilePath)) {
+            if (tempFilePath && fs.existsSync(tempFilePath)) {
                 fs.unlinkSync(tempFilePath);
             }
         });
