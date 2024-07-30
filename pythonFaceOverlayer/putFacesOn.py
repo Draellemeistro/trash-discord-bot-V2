@@ -240,7 +240,8 @@ if __name__ == "__main__":
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     people = []
-    possible_people = os.listdir("./face_overlays")
+    face_overlays_path = os.path.join(dir_path, 'face_overlays')
+    possible_people = os.listdir(face_overlays_path)
     # Process additional strings as needed
     for string in additional_strings:
         print(f"Processing string: {string}")
