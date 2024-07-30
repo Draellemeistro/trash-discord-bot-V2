@@ -1,6 +1,9 @@
-const {SlashCommandBuilder} = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const path = require('path');
 const { spawn } = require('child_process');
+const fs = require('fs');
+const axios = require('axios');
+const os = require('os');
 const pythonPath = path.join(__dirname, '..', '..', 'pythonFaceOverlayer');
 const scriptPath = path.join(pythonPath, 'run_faces.sh');
 const imgPath = path.join(pythonPath, 'output.jpg');
@@ -14,8 +17,8 @@ module.exports = {
                 .setName('overlay')
                 .setDescription('overlay faces on an image')
                 .addAttachmentOption(option => option.setName('file')
-                        .setDescription('file to overlay')
-                        .setRequired(true))
+                    .setDescription('file to overlay')
+                    .setRequired(true))
                 .addStringOption(option =>
                     option.setName('person')
                         .setDescription('person to overlay')
@@ -33,13 +36,17 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand();
         let commandStr = `${scriptPath}`;
 
-
         if (subcommand === 'overlay') {
             const file = interaction.options.getAttachment('file');
             const person = interaction.options.getString('person');
-            const otherPeople = interaction.options.getString('other people');
+            const otherPeople = interaction.options.getString('other_people');
 
-            commandStr += ` overlay ${file.url} ${person}`;
+            // Download the image
+            const response = await axios.get(file.url, { responseType: 'arraybuffer' });
+            const tempFilePath = path.join(os.tmpdir(), 'temp_image.png');
+            fs.writeFileSync(tempFilePath, response.data);
+
+            commandStr += ` overlay ${tempFilePath} ${person}`;
             if (otherPeople) {
                 const trimmedPeople = otherPeople.split(',').map(person => person.trim()).join(' ');
                 commandStr += ` ${trimmedPeople}`;
@@ -66,6 +73,10 @@ module.exports = {
         process.on('close', (code) => {
             if (code !== 0) {
                 interaction.reply(`Process exited with code ${code}`);
+            }
+            // Clean up the temporary file
+            if (fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
             }
         });
     }
