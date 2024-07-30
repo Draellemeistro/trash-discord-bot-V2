@@ -52,6 +52,43 @@ module.exports = {
                 const trimmedPeople = otherPeople.split(',').map(person => person.trim()).join(' ');
                 commandStr += ` ${trimmedPeople}`;
             }
+
+            // Ensure the script is executable
+            fs.chmodSync(scriptPath, '755');
+
+            const process = spawn(commandStr, { shell: true });
+
+            process.stdout.on('data', (data) => {
+                const output = data.toString();
+                console.log(`stdout: ${output}`);
+
+                if (output.includes('Saving image')) {
+                    if (interaction.replied || interaction.deferred) {
+                        console.log('Replying with image');
+                        interaction.followUp({ files: [imgPath] });
+                    } else {
+                        interaction.reply({ files: [imgPath] });
+                    }
+                }
+            });
+
+            process.stderr.on('data', (data) => {
+                console.error(`stderr: ${data.toString()}`);
+            });
+
+            process.on('close', (code) => {
+                if (code !== 0) {
+                    if (interaction.replied || interaction.deferred) {
+                        interaction.followUp(`Process exited with code ${code}`);
+                    } else {
+                        interaction.reply(`Process exited with code ${code}`);
+                    }
+                }
+                // Clean up the temporary file
+                if (tempFilePath && fs.existsSync(tempFilePath)) {
+                    fs.unlinkSync(tempFilePath);
+                }
+            });
         } else if (subcommand === 'people') {
             const overlaysPath = path.join(pythonPath, 'face_overlays');
             const folders = fs.readdirSync(overlaysPath).filter(file => fs.statSync(path.join(overlaysPath, file)).isDirectory());
@@ -60,45 +97,7 @@ module.exports = {
                 await interaction.followUp(`Available overlays: ${folderNames}`);
             } else {
                 await interaction.reply(`Available overlays: \n${folderNames}\n\n donate some photos, brev`);
-                return;
             }
         }
-
-        // Ensure the script is executable
-        fs.chmodSync(scriptPath, '755');
-
-        const process = spawn(commandStr, { shell: true });
-
-        process.stdout.on('data', (data) => {
-            const output = data.toString();
-            console.log(`stdout: ${output}`);
-
-            if (output.includes('Saving image')) {
-                if (interaction.replied || interaction.deferred) {
-                    console.log('Replying with image');
-                    interaction.followUp({ files: [imgPath] });
-                } else {
-                    interaction.reply({ files: [imgPath] });
-                }
-            }
-        });
-
-        process.stderr.on('data', (data) => {
-            console.error(`stderr: ${data.toString()}`);
-        });
-
-        process.on('close', (code) => {
-            if (code !== 0) {
-                if (interaction.replied || interaction.deferred) {
-                    interaction.followUp(`Process exited with code ${code}`);
-                } else {
-                    interaction.reply(`Process exited with code ${code}`);
-                }
-            }
-            // Clean up the temporary file
-            if (tempFilePath && fs.existsSync(tempFilePath)) {
-                fs.unlinkSync(tempFilePath);
-            }
-        });
     }
-}
+};
