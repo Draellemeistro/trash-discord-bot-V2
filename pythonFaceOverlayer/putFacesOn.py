@@ -110,6 +110,11 @@ def weigh_faces(mark_img, found_faces, landmark_mdl, accept_faces, overlays):
     draw_marks(mark_img, left_eye)
     draw_marks(mark_img, right_eye)
     draw_marks(mark_img, nose)
+
+    if found_faces is None or len(found_faces) == 0:
+        print("No faces detected")
+        if
+        return 0
     return accepted_faces, overlays, mark_img
 
 

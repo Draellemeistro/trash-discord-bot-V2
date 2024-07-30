@@ -8,6 +8,17 @@ const pythonPath = path.join(__dirname, '..', '..', 'pythonFaceOverlayer');
 const scriptPath = path.join(pythonPath, 'run_faces.sh');
 const imgPath = path.join(__dirname, '..', '..', 'output.jpg');
 
+function formatPersonString(person) {
+    // Replace any symbols or numbers with a space
+    let cleanedString = person.replace(/[^a-zA-Z\s]/g, ' ');
+
+    // Split the string into words, capitalize the first letter of each word, and join them back
+    return cleanedString.split(' ')
+        .filter(word => word.length > 0) // Remove any empty strings
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('face-inate')
@@ -21,12 +32,8 @@ module.exports = {
                     .setRequired(true))
                 .addStringOption(option =>
                     option.setName('person')
-                        .setDescription('person to overlay')
-                        .setRequired(true))
-                .addStringOption(option =>
-                    option.setName('other_people')
                         .setDescription('people to overlay, separated by commas: "person1, person2, person3"')
-                        .setRequired(false)))
+                        .setRequired(true)))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('people')
@@ -40,18 +47,12 @@ module.exports = {
         if (subcommand === 'overlay') {
             const file = interaction.options.getAttachment('file');
             const person = interaction.options.getString('person');
-            const otherPeople = interaction.options.getString('other_people');
-
+            const formattedPerson = formatPersonString(person);
             // Download the image
             const response = await axios.get(file.url, { responseType: 'arraybuffer' });
             tempFilePath = path.join(os.tmpdir(), 'temp_image.png');
             fs.writeFileSync(tempFilePath, response.data);
-
-            commandStr += ` overlay ${tempFilePath} ${person}`;
-            if (otherPeople) {
-                const trimmedPeople = otherPeople.split(',').map(person => person.trim()).join(' ');
-                commandStr += ` ${trimmedPeople}`;
-            }
+            commandStr += ` overlay ${tempFilePath} ${formattedPerson}`;
 
             // Ensure the script is executable
             fs.chmodSync(scriptPath, '755');
