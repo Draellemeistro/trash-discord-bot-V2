@@ -113,7 +113,6 @@ def weigh_faces(mark_img, found_faces, landmark_mdl, accept_faces, overlays):
 
     if found_faces is None or len(found_faces) == 0:
         print("No faces detected")
-        if
         return 0
     return accepted_faces, overlays, mark_img
 
