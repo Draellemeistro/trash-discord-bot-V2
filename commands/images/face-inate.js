@@ -2,6 +2,7 @@ const {SlashCommandBuilder} = require("discord.js");
 const path = require('path');
 const { spawn } = require('child_process');
 const pythonPath = path.join(__dirname, '..', '..', 'pythonFaceOverlayer');
+const scriptPath = path.join(pythonPath, 'run_faces.sh');
 const imgPath = path.join(pythonPath, 'output.jpg');
 
 module.exports = {
@@ -30,7 +31,7 @@ module.exports = {
 
     async execute(interaction) {
         const subcommand = interaction.options.getSubcommand();
-        let commandStr = `./run_faces.sh`;
+        let commandStr = `${scriptPath}`;
 
 
         if (subcommand === 'overlay') {
