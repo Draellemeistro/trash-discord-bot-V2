@@ -31,5 +31,10 @@ module.exports = {
         player.on(AudioPlayerStatus.Idle, () => {
             connection.destroy(); // Leave the channel after playing the sound
         });
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp('Playing sound...', { ephemeral: true });
+        } else {
+            await interaction.reply('Playing sound...', { ephemeral: true });
+        }
         },
 };

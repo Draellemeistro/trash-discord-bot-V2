@@ -5,6 +5,10 @@ module.exports = {
         .setName('ping')
         .setDescription('Replies with Pong!'),
     async execute(interaction) {
-        await interaction.reply('Pong!');
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp('Pong!', { ephemeral: true });
+        } else {
+            await interaction.reply('Pong!', { ephemeral: true });
+        }
     },
 };
