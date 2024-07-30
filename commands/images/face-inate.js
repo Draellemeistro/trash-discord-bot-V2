@@ -67,6 +67,7 @@ module.exports = {
 
             if (output.includes('Saving image')) {
                 if (interaction.replied || interaction.deferred) {
+                    console.log('Replying with image');
                     interaction.followUp({ files: [imgPath] });
                 } else {
                     interaction.reply({ files: [imgPath] });
