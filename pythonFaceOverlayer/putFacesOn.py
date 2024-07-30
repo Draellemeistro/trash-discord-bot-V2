@@ -270,18 +270,18 @@ if __name__ == "__main__":
     # Print the path of the newly written image file
     print(output_path)
     print(f"Saving to {output_path}")
-    print("absolute path of img: " os.path.abspath("output.jpg"))
-        if os.path.isfile("output.jpg"):
-            print("Saving image")
-        else:
-            counter = 0
-            while not os.path.isfile("output.jpg"):
-                print("Image not saved")
-                cv2.imwrite("output.jpg", return_img)
-                counter += 1
-                if counter > 4:
-                    print("uuhhhh... I'm out.")
-                    break
+    print("absolute path of img: ", os.path.abspath("output.jpg"))
+    if os.path.isfile("output.jpg"):
+        print("Saving image")
+    else:
+        counter = 0
+        while not os.path.isfile("output.jpg"):
+            print("Image not saved")
+            cv2.imwrite("output.jpg", return_img)
+            counter += 1
+            if counter > 4:
+                print("uuhhhh... I'm out.")
+                break
     if return_img2 is not None:
         cv2.imwrite("output2.jpg", return_img2)
         cv2.imwrite("output3.jpg", return_img3)

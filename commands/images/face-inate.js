@@ -6,7 +6,7 @@ const axios = require('axios');
 const os = require('os');
 const pythonPath = path.join(__dirname, '..', '..', 'pythonFaceOverlayer');
 const scriptPath = path.join(pythonPath, 'run_faces.sh');
-const imgPath = path.join(pythonPath, 'output.jpg');
+const imgPath = path.join(__dirname, '..', '..', 'output.jpg');
 
 module.exports = {
     data: new SlashCommandBuilder()
