@@ -45,6 +45,7 @@ module.exports = {
         let tempFilePath;
 
         if (subcommand === 'overlay') {
+            console.log('Overlaying faces');
             const file = interaction.options.getAttachment('file');
             const person = interaction.options.getString('person');
             const formattedPerson = formatPersonString(person);
